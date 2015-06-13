@@ -1,6 +1,4 @@
-## SB Admin v2.0 rewritten in AngularJS
-
-
+## AngularJS Word frequency histogram
 Calculate same words from text input, file input and custom url, display results in beatiful charts.
 Used Interface: https://github.com/start-angular/sb-admin-angular
 
