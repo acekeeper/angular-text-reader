@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header"><i class="fa fa-file-text-o"></i> Plane Text Reader</h1>
+    </div>  
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12" ng-controller="FormCtrl">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+             Choose your text file from local computer or paste some text in input area below:
+         </div>
+         <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-8" >
+                    <form role="form">
+                       <div class="form-group">
+                        <label>Input your text file (only *txt, *html is allowed) and press "Analyze"</label>
+                        <!-- use custom directive to read input file -->
+                        <input type="file" on-read-file="showContent($fileContent)"> 
+                    </div>
+                    <strong>Input your url, press "Send Request" and then press "Analyze"</strong><br>
+                    <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span><span> For cross-domain requests use <a href="http://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi" target="_blanc">"Allow-Control-Allow-Origin" extension</a> for Google Chrome</span><br>
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span><span> For instant use type url within localsite directory: http://base22.ru/SomePage.html</span>
+                    <div class="input-group">
+                        <!-- bind input value with model -->
+                        <input type="url" class="form-control" ng-model="customUrl" placeholder="Start typing with http://...">
+                        <span class="input-group-btn">
+                          <!-- load controller method on btn click -->
+                          <button class="btn btn-default" type="button" ng-click="sendRequest()">Send Request</button>
+                      </span>
+                  </div><br>
+                  <!-- hide textarea if file was uploaded -->
+                  <div class="form-group" ng-if="!content"> 
+                      <label>Input your text</label>
+                      <textarea class="form-control" rows="6" ng-model="$parent.textData"> </textarea> 
+                  </div>
+                  <!-- show text content of uploaded file if it was uploaded -->
+                  
+                  <div class="form-group" ng-if="content">
+                  <label>Input your text</label> 
+                    <pre>{{ content }}</pre>
+                </div>
+                <!-- load controller methods on btn click -->
+                <button type="submit" class="btn btn-default" ng-click="calc()" >Analyze</button>
+                <button type="reset" class="btn btn-default" ng-click="res()">Reset Data</button>
+            </form>
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+        <div class="col-lg-6">
+
+        </div>
+        <!-- /.col-lg-6 (nested) -->
+    </div>
+    <!-- /.row (nested) -->
+</div>
+<!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+</div>
+<!-- /.col-lg-12 -->
+</div>
