@@ -6,7 +6,7 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
- 
+
 //Plain Text Reader Controller
 angular.module('sbAdminApp')
 .controller('FormCtrl', function ($scope, $state, $http, Data) {
@@ -28,11 +28,11 @@ angular.module('sbAdminApp')
               alert("Data received - press 'Analyze'")
           }).
           error(function (error) {
-              // on error throw alert
+              // on success throw response to scope
               alert("No data found. Try another url")
           })
-
       }
+      
 //expect data from textarea
 $scope.textData = ""; 
 
@@ -68,10 +68,12 @@ if (typeof words[word] == "undefined")
 	words[word] = 1;
 }
 else {
+
               	//icrease prop for every repeated word
               	words[word]++;
               }
           }
+
           var wordList = [];
 
           //get rid of one-time repeating words
@@ -93,6 +95,14 @@ for (var i = 0; i < wordList.length; i++) {
 }
 
 $scope.restext = message.join("\n");
+
+//check if there are some repeating words
+if($scope.restext ===""){
+	alert("No repeating words were found! | Use only latin keyboard layout");
+	//prevent go to chart page
+              $state.go('', null, { notify: false }); 
+}
+
 
 //send our words arr to service
 Data.setMessage($scope.restext); 
@@ -154,7 +164,6 @@ angular.module('sbAdminApp').service('Data', [function () {
     	this.labels = [];
     	this.counts = [];
     };
-
 }]);
 
 //Directive for text extraction from the file input
