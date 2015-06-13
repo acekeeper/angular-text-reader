@@ -29,7 +29,7 @@ angular.module('sbAdminApp')
               alert("Data received - press 'Analyze'")
           }).
           error(function (error) {
-              // on success throw response to scope
+              // on error throw alert
               alert("No data found. Try another url")
           })
 
