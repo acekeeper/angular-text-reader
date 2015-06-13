@@ -6,8 +6,7 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
-
-
+ 
 //Plain Text Reader Controller
 angular.module('sbAdminApp')
 .controller('FormCtrl', function ($scope, $state, $http, Data) {
@@ -69,12 +68,10 @@ if (typeof words[word] == "undefined")
 	words[word] = 1;
 }
 else {
-
               	//icrease prop for every repeated word
               	words[word]++;
               }
           }
-
           var wordList = [];
 
           //get rid of one-time repeating words
@@ -116,7 +113,6 @@ for (var i = 0; i < wordList.length; i++) {
 
 //go to chart page
 $state.go('dashboard.chart'); 
-
 };
 
 // reset Data button
@@ -124,10 +120,7 @@ $scope.res = function () {
 	delete $scope.content;
 	delete $scope.textData;
 };
-
-
 });
-
 
 //Static service for data sharing between controllers
 angular.module('sbAdminApp').service('Data', [function () {
