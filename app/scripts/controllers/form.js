@@ -6,12 +6,22 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
- 
-//Plain Text Reader Controller
+
+
+//-------------WORD FREQUENCY STATS CONTROLLER STARTS-------------
 angular.module('sbAdminApp')
 .controller('FormCtrl', function ($scope, $state, $http, Data) {
+
+	// reset shared service values for every page reloading
 	Data.resetValue();
+
+	// expect url input
 	$scope.customUrl = "";
+	//expect data from textarea
+$scope.textData = ""; 
+
+
+//-------------METHOD TO PERFORM HTTP GET REQUEST-------------
 	$scope.sendRequest = function () {
 
           // check if input url is not empty
@@ -25,23 +35,30 @@ angular.module('sbAdminApp')
 
           // encode string fron url input
           var enc= window.encodeURIComponent($scope.customUrl);
+
 // compose url request
 var url=proxy+'?url='+enc;
+
 // send GET request
 $http.get(url).
 success(function (response) {
+
               // on success throw response to scope
               var fullResp = response;
+
                // get only response contents
                $scope.resp = fullResp.contents;
+
                  // check if response contents exists
                  if (!$scope.resp) {
                  	alert("No data found. Paste some valid url");
                  }
                  else{
+
     // lets count number of words in response           	
     var counter = 0;
     $scope.resp.replace(/(\s)/g,function (a) {
+
    // for each word found increase the counter value by 1
    counter++;
 })
@@ -52,17 +69,45 @@ error(function (error) {
               // on success throw response to scope
               alert("No data found. Try another url")
           })
-}
-//expect data from textarea
-$scope.textData = ""; 
 
+}
+
+//-------------METHOD TO EXTRACT FILE INPUT CONTENT-------------
 $scope.showContent = function ($fileContent) {
 
       	//expect data from textfile (using directive on-read-file)
       	$scope.content = $fileContent; 
       };
+//-------------END OF METHOD-------------
 
-      /*MAIN FUNCTION TO ANALYZE INPUT DATA*/
+//-------------DIRECTIVE FOR TEXT EXTRACTION FROM THE FILE INPUT-------------
+angular.module('sbAdminApp')
+.directive('onReadFile', function ($parse) {
+	return {
+        restrict: 'A', //use as attr only
+        scope: false, //don't create own scope
+        link: function (scope, element, attrs) {
+        	var fn = $parse(attrs.onReadFile);
+
+            //using HTML5 FileReader API
+            element.on('change', function (onChangeEvent) {
+            	var reader = new FileReader(); 
+
+            	reader.onload = function (onLoadEvent) {
+            		scope.$apply(function () {
+            			fn(scope, { $fileContent: onLoadEvent.target.result });
+            		});
+            	};
+            	//read file content when user chooses it from  the local directory
+            	reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+
+            });
+        }
+    };
+});
+//-------------END OF DIRECTIVE-------------
+
+//-------------MAIN METHOD TO ANALYZE INPUT DATA-------------
       $scope.calc = function () { 
 
 //check if all fields are empty;
@@ -93,8 +138,9 @@ else {
               	words[word]++;
               }
           }
+
           var wordList = [];
-          
+
           //get rid of one-time repeating words
           for (var word in words) 
           {
@@ -111,6 +157,7 @@ var message = [];
 for (var i = 0; i < wordList.length; i++) {
 	message.push(wordList[i][0] + " => " + wordList[i][1]);
 }
+
 $scope.restext = message.join("\n");
 
 //check if there are some repeating words
@@ -146,9 +193,9 @@ $scope.res = function () {
 	delete $scope.textData;
 };
 });
+//-------------END OF METHOD-------------
 
-
-//Static service for data sharing between controllers
+//-------------STATIC SERVICE FOR DATA SHARING BETWEEN CONTROLLERS-------------
 angular.module('sbAdminApp').service('Data', [function () {
 
 	this.setMessage = function (newObj) {
@@ -182,29 +229,6 @@ angular.module('sbAdminApp').service('Data', [function () {
     };
 
 }]);
+//-------------END OF SERVICE------------
 
-//Directive for text extraction from the file input
-angular.module('sbAdminApp')
-.directive('onReadFile', function ($parse) {
-	return {
-        restrict: 'A', //use as attr only
-        scope: false, //don't create own scope
-        link: function (scope, element, attrs) {
-        	var fn = $parse(attrs.onReadFile);
-
-            //using HTML5 FileReader API
-            element.on('change', function (onChangeEvent) {
-            	var reader = new FileReader(); 
-
-            	reader.onload = function (onLoadEvent) {
-            		scope.$apply(function () {
-            			fn(scope, { $fileContent: onLoadEvent.target.result });
-            		});
-            	};
-            	//read file content when user chooses it from  the local directory
-            	reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-
-            });
-        }
-    };
-});
+//-------------WORD FREQUENCY STATS CONTROLLER ENDS------------
