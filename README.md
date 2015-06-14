@@ -15,6 +15,9 @@ http://base22.ru/#/dashboard/form
 6. npm start - a shortcut for grunt serve<br>
 7. npm run dist - a shortcut for grunt serve:dist to minify the files for deployment
 
+## Reinforced with Simple PHP Proxy
+http://github.com/cowboy/php-simple-proxy/
+
 ### Automation tools
 
 - [Grunt](http://gruntjs.com/)
