@@ -6,8 +6,7 @@
  * # MainCtrl
  * Controller of the sbAdminApp
  */
-
-
+ 
 //Plain Text Reader Controller
 angular.module('sbAdminApp')
 .controller('FormCtrl', function ($scope, $state, $http, Data) {
@@ -32,22 +31,27 @@ var url=proxy+'?url='+enc;
 $http.get(url).
 success(function (response) {
               // on success throw response to scope
-              $scope.fullResp = response;
+              var fullResp = response;
                // get only response contents
-               $scope.resp = $scope.fullResp.contents;
+               $scope.resp = fullResp.contents;
                  // check if response contents exists
                  if (!$scope.resp) {
                  	alert("No data found. Paste some valid url");
                  }
                  else{
-                 	alert("Data received! Press 'Analyze'");
-                 }
-             }).
+    // lets count number of words in response           	
+    var counter = 0;
+    $scope.resp.replace(/(\s)/g,function (a) {
+   // for each word found increase the counter value by 1
+   counter++;
+})
+    alert("Data received! There are "+ counter +" words found. Press 'Analyze'");
+}
+}).
 error(function (error) {
               // on success throw response to scope
               alert("No data found. Try another url")
           })
-
 }
 //expect data from textarea
 $scope.textData = ""; 
@@ -89,9 +93,8 @@ else {
               	words[word]++;
               }
           }
-
           var wordList = [];
-
+          
           //get rid of one-time repeating words
           for (var word in words) 
           {
@@ -101,7 +104,6 @@ else {
           		}
           	}
           }
-
           wordList.sort(function (a, b) { return b[1] - a[1]; });
 
 //simple arr to print our words
@@ -109,7 +111,6 @@ var message = [];
 for (var i = 0; i < wordList.length; i++) {
 	message.push(wordList[i][0] + " => " + wordList[i][1]);
 }
-
 $scope.restext = message.join("\n");
 
 //check if there are some repeating words
@@ -119,11 +120,8 @@ if($scope.restext ===""){
 	$state.go('', null, { notify: false }); 
 }
 
-
 //send our words arr to service
 Data.setMessage($scope.restext); 
-
-
 $scope.labels = [];
 $scope.counts = [];
 for (var i = 0; i < wordList.length; i++) {
@@ -147,8 +145,6 @@ $scope.res = function () {
 	delete $scope.content;
 	delete $scope.textData;
 };
-
-
 });
 
 
