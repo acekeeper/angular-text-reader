@@ -21,7 +21,6 @@ angular.module('sbAdminApp')
           	return false;
           }
 
-          // $http.get - perform HTTP GET to inserted url
           // use proxy.php to bypass browser cross-domain security policy
           var proxy = '../../proxy.php';
 
@@ -36,8 +35,14 @@ success(function (response) {
               $scope.fullResp = response;
                // get only response contents
                $scope.resp = $scope.fullResp.contents;
-               alert("Data received! Press 'Analyze'");
-           }).
+                 // check if response contents exists
+                 if (!$scope.resp) {
+                 	alert("No data found. Paste some valid url");
+                 }
+                 else{
+                 	alert("Data received! Press 'Analyze'");
+                 }
+             }).
 error(function (error) {
               // on success throw response to scope
               alert("No data found. Try another url")
