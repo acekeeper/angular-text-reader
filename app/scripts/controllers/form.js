@@ -7,6 +7,7 @@
  * Controller of the sbAdminApp
  */
 
+
 //Plain Text Reader Controller
 angular.module('sbAdminApp')
 .controller('FormCtrl', function ($scope, $state, $http, Data) {
@@ -21,18 +22,28 @@ angular.module('sbAdminApp')
           }
 
           // $http.get - perform HTTP GET to inserted url
-          $http.get($scope.customUrl).
-          success(function (response) {
+          // use proxy.php to bypass browser cross-domain security policy
+          var proxy = '../../proxy.php';
+
+          // encode string fron url input
+          var enc= window.encodeURIComponent($scope.customUrl);
+// compose url request
+var url=proxy+'?url='+enc;
+// send GET request
+$http.get(url).
+success(function (response) {
               // on success throw response to scope
-              $scope.resp = response;
-              alert("Data received - press 'Analyze'")
-          }).
-          error(function (error) {
+              $scope.fullResp = response;
+               // get only response contents
+               $scope.resp = $scope.fullResp.contents;
+               alert("Data received! Press 'Analyze'");
+           }).
+error(function (error) {
               // on success throw response to scope
               alert("No data found. Try another url")
           })
-      }
-      
+
+}
 //expect data from textarea
 $scope.textData = ""; 
 
@@ -100,7 +111,7 @@ $scope.restext = message.join("\n");
 if($scope.restext ===""){
 	alert("No repeating words were found! | Use only latin keyboard layout");
 	//prevent go to chart page
-              $state.go('', null, { notify: false }); 
+	$state.go('', null, { notify: false }); 
 }
 
 
@@ -123,6 +134,7 @@ for (var i = 0; i < wordList.length; i++) {
 
 //go to chart page
 $state.go('dashboard.chart'); 
+
 };
 
 // reset Data button
@@ -130,7 +142,10 @@ $scope.res = function () {
 	delete $scope.content;
 	delete $scope.textData;
 };
+
+
 });
+
 
 //Static service for data sharing between controllers
 angular.module('sbAdminApp').service('Data', [function () {
@@ -164,6 +179,7 @@ angular.module('sbAdminApp').service('Data', [function () {
     	this.labels = [];
     	this.counts = [];
     };
+
 }]);
 
 //Directive for text extraction from the file input
